@@ -1,0 +1,133 @@
+﻿@page "/"
+
+@using Syncfusion.Blazor.Diagram
+@using System.Collections.ObjectModel
+
+<style>
+    #diagram-space {
+        float: left;
+    }
+
+    #properties {
+        float: right;
+    }
+</style>
+
+<div id="properties">
+   
+    <input type="button" value="clear" @onclick="clear" />
+    <input type="button" value="undo" @onclick="undo" />
+    <input type="button" value="redo" @onclick="redo" />
+    <input type="button" value="group" @onclick="group" />
+    <input type="button" value="ungroup" @onclick="ungroup" />
+</div>
+<div id="diagram-space">
+    <SfDiagramComponent @ref="diagram" Width="1000px" Height="1000px" @bind-Nodes="@nodes" @bind-Connectors="@connectors"></SfDiagramComponent>
+</div>
+
+    @code{
+        SfDiagramComponent diagram;
+        DiagramObjectCollection<Node> nodes = new DiagramObjectCollection<Node>();
+        DiagramObjectCollection<Connector> connectors = new DiagramObjectCollection<Connector>();
+
+        protected override void OnInitialized()
+        {
+            Connector connector = new Connector()
+            {
+                ID = "Connector1",
+                SourceID = "node1",
+                TargetID = "node2",
+                SourcePortID = "port1",
+                TargetPortID = "port2",
+            };
+            connectors.Add(connector);
+            Node node = new Node()
+            {
+                ID = "node1",
+                Width = 100,
+                Height = 100,
+                OffsetX = 100,
+                OffsetY = 100,
+                Style = new ShapeStyle() { Fill = "green" },
+                Ports = new DiagramObjectCollection<PointPort>()
+                {
+                    new PointPort()
+                    {
+                        ID = "port1", Offset = new DiagramPoint() {X = 1, Y = 0.5}, Visibility = PortVisibility.Visible
+                    }
+                }
+            };
+            nodes.Add(node);
+            Node node2 = new Node()
+            {
+                ID = "node2",
+                Width = 100,
+                Height = 100,
+                OffsetX = 300,
+                OffsetY = 100,
+                Pivot = new DiagramPoint() { X = 0, Y = 0 },
+                Ports = new DiagramObjectCollection<PointPort>()
+                {
+                    new PointPort()
+                    {
+                        ID = "port2", Offset = new DiagramPoint() {X = 0, Y = 0.5}, Visibility = PortVisibility.Visible
+                    }
+                },
+                Annotations = new DiagramObjectCollection<ShapeAnnotation>()
+            {
+                    new ShapeAnnotation()
+                    {
+                        ID = "label1",
+                        Content= "Default Shape", Style =new TextStyle() { Color= "red" },
+                    }
+                }
+            };
+            nodes.Add(node2);
+            NodeGroup node3 = new NodeGroup()
+            {
+                ID = "node3",
+                Children = new string[] { "node1", "node2", "Connector1" },
+                Style = new ShapeStyle() { Fill = "yellow" }
+            };
+            nodes.Add(node3);
+            Connector connector1 = new Connector()
+            {
+                ID = "Connector2",
+                SourcePoint = new DiagramPoint() { X = 400, Y = 300 },
+                TargetPoint = new DiagramPoint() { X = 500, Y = 400 },
+            };
+            connectors.Add(connector1);
+            Node node5 = new Node()
+            {
+                ID = "node5",
+                Width = 100,
+                Height = 100,
+                OffsetX = 600,
+                OffsetY = 300,
+
+            };
+            nodes.Add(node5);
+        }
+
+        private void clear()
+        {
+            diagram.Clear();
+        }
+        private void undo()
+        {
+            diagram.Undo();
+        }
+        private void redo()
+        {
+            diagram.Redo();
+        }
+        
+        private void group()
+        {
+            diagram.Group();
+        }
+        private void ungroup()
+        {
+            diagram.UnGroup();
+        }
+    }
