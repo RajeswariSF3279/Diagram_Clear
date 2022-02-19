@@ -20,7 +20,7 @@ with:
 dotnet-version: 3.1
 
 # Publishes the Blazor project to the release folder
-– name: Publish .NET Core Project
+– name: Publish .NET Project
 run: dotnet publish Diagram_Clear.csproj -c Release -o release –nologo
 
 # Changes the base tag in index.html from ‘/’ to ‘Diagram_Clear’ to match the GitHub Pages repository subdirectory
